@@ -2,46 +2,50 @@ library(data.table)
 library(fitdistrplus)
 library(xtable)
 
-
-#3 spp
-df <- fread("results/str_coex/FG-metrics_coexistence.txt")
-df <- df[which(df$scenario == 5),]
+plus <- exp(1) #for SND
 
 
-descdist(df$SND + exp(1))
-descdist(df$SFD + exp(1))
 
+## 3 spp
+df3 <- fread("results/str_coex/FG-metrics_coexistence-complete.txt")
+df3 <- df3[which(df3$scenario == 5),] #full network
 
-snd3 <- glm(SND + exp(1) ~ dominance * skewness * kurtosis, data = df, family = "Gamma"(link = "log"))
-#SND = 0.4436 + 0.2112 * S + 0.0477 * K - 0.0153 * S * K
+#distribution
+df3_complete <- df3[complete.cases(df3$SND),]
+df3_complete <- df3_complete[complete.cases(df3_complete$SFD),]
 
-sfd3 <- glm(SFD + exp(1) ~ dominance * skewness * kurtosis, data = df, family = "Gamma"(link = "log"))
-#SFD = 0.4436 + 0.2112 * S + 0.0477 * K - 0.0153 * S * K
+descdist(df3_complete$SND + plus)
+descdist(df3_complete$SFD)
 
+#model
+snd3 <- glm(SND + plus ~ dominance * skewness * kurtosis * PNR, data = df3, family = "Gamma"(link = "log"))
+sfd3 <- glm(SFD ~ dominance * skewness * kurtosis * PNR, data = df3, family = "Gamma"(link = "log"))
+
+#summaries
 summary(snd3)
 summary(sfd3)
-xtable(snd3)
-xtable(sfd3)
+#xtable(snd3)
+#xtable(sfd3)
 
 
 
-#4 spp
-df <- fread("results/str_coex/FG-metrics_coexistence-4spp.txt")
-df <- df[which(df$scenario == 5),]
+## 4 spp
+df4 <- fread("results/str_coex/FG-metrics_coexistence-complete-4spp.txt")
+df4 <- df4[which(df4$scenario == 5),] #full network
 
-summary(glm(SND ~ dominance * skewness * kurtosis, data = df))
-#SND = 0.4436 + 0.2112 * S + 0.0477 * K - 0.0153 * S * K
+#distribution
+df4_complete <- df4[complete.cases(df4$SND),]
+df4_complete <- df4_complete[complete.cases(df4_complete$SFD),]
 
-summary(glm(SFD ~ dominance * skewness * kurtosis, data = df))
-#SFD = 0.4436 + 0.2112 * S + 0.0477 * K - 0.0153 * S * K
+descdist(df4_complete$SND + plus)
+descdist(df4_complete$SFD)
 
-print(xtable(summary(glm(SFD ~ dominance * skewness * kurtosis, data = df))))
+#model
+snd4 <- glm(SND + plus ~ dominance * skewness * kurtosis * PNR, data = df4, family = "Gamma"(link = "log"))
+sfd4 <- glm(SFD ~ dominance * skewness * kurtosis * PNR, data = df4, family = "Gamma"(link = "log"))
 
-
-
-
-
-
-
-
-
+#summaries
+summary(snd4)
+summary(sfd4)
+#xtable(snd4)
+#xtable(sfd4)

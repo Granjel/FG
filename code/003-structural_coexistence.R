@@ -67,7 +67,7 @@ rownames(str_coex) <- NULL
 
 
 #create one df with structural coex. and module metrics
-metrics <- cbind(str_coex, res[, 4:8])
+metrics <- cbind(str_coex, res[, 4:9])
 rownames(metrics) <- NULL
 
 

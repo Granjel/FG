@@ -91,10 +91,23 @@ compute_overlap <- function(alpha,Nrand){
 
 #function to calculate the dominance of the diagonal (intra- over inter-)
 dominance <- function(alpha){
-  dom <- abs(sum(alpha[row(alpha) == col(alpha)], na.rm = TRUE) /
-    sum(alpha[row(alpha) != col(alpha)], na.rm = TRUE))
+  dom <- log10((abs(sum(alpha[row(alpha) == col(alpha)], na.rm = TRUE) / (nrow(alpha))) /
+    (sum(alpha[row(alpha) != col(alpha)], na.rm = TRUE) / (prod(dim(alpha)) - nrow(alpha)))))
+  if(isTRUE(dom == Inf)){dom <- NA}
+  if(isTRUE(dom == -Inf)){dom <- NA}
+  if(isTRUE(is.nan(dom))){dom <- NA}
   return(dom)
 }
+
+#function to calculate the Positive-Negative Ratio (PNR)
+pnr <- function(alpha){
+  ratio <- log10(sum(alpha[which(alpha > 0)]) / abs(sum(alpha[which(alpha < 0)])))
+  if(isTRUE(ratio == Inf)){ratio <- NA}
+  if(isTRUE(ratio == -Inf)){ratio <- NA}
+  if(isTRUE(is.nan(ratio))){ratio <- NA}
+  return(ratio)
+}
+
 
 #running, final function
 structural_coex <- function(alpha, intrinsic, n){
@@ -103,9 +116,9 @@ structural_coex <- function(alpha, intrinsic, n){
   
   combos <- t(combn(rownames(alpha), n)) #matrix with all possible combinations of n species
   
-  results_combos <- as.data.frame(matrix(nrow = dim(combos)[1], ncol = 8))
+  results_combos <- as.data.frame(matrix(nrow = dim(combos)[1], ncol = 9))
   row.names(results_combos) <- apply(combos, 1, paste, collapse = "_") #change the 'collapse' feature if needed
-  colnames(results_combos) <- c("SND", "SFD", "feasibility", "cv", "dominance", "SKR", "skewness", "kurtosis")
+  colnames(results_combos) <- c("SND", "SFD", "feasibility", "cv", "dominance", "SKR", "skewness", "kurtosis", "PNR")
   
   for(i in 1:nrow(combos)){
     zeroes <- matrix(data = 0, nrow = n, ncol = n)
@@ -169,6 +182,15 @@ structural_coex <- function(alpha, intrinsic, n){
                   results_combos$skewness[i] <- skewness(as.numeric(alpha2))
                   #kurtosis
                   results_combos$kurtosis[i] <- kurtosis(as.numeric(alpha2))
+                  
+                  #catch error dominance
+                  possibleError5 <- tryCatch(pnr(alpha2), error=function(e) e)
+                  if(inherits(possibleError5, "error")){
+                    results_combos$PNR[i] <- NA
+                  } else {
+                    #dominance
+                    results_combos$PNR[i] <- pnr(alpha2)
+                  }
                 }
               }
             }

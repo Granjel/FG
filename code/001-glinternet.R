@@ -48,7 +48,9 @@ for (i in 1:length(gli_models)){
 #plot some errors and lambdas as examples
 pdf("figures/examples_errors_lambdas.pdf", width = 4, height = 7)
 
-par(mfrow=c(3, 1), mai = c(0.4, 0.4, 0.2, 0.1))
+par(mfrow=c(4, 1), mai = c(0.55, 0.55, 0.2, 0.05))
+
+plot(1:50, gli_models[[1]]$lambda, xlab = "Lambda index", ylab = "Lambda value")
 
 plot(gli_models[[which(lambdas == max(lambdas))]])
 text(x = 30, y = 250, labels = species[which(lambdas == max(lambdas))])
@@ -62,9 +64,10 @@ plot(gli_models[[which(lambdas == min(lambdas))[1]]])
 text(x = 12, y = 25, labels = species[which(lambdas == min(lambdas))[1]])
 text(x = 12, y = 25*0.9, labels = paste("Selected lambda =", min(lambdas), sep = " "))
 
-text(grconvertX(.015, "ndc", "user"), grconvertY(.9925, "ndc", "user"), "a", cex = 1.65, xpd = NA)
-text(grconvertX(.015, "ndc", "user"), grconvertY(.6600, "ndc", "user"), "b", cex = 1.65, xpd = NA)
-text(grconvertX(.015, "ndc", "user"), grconvertY(.3300, "ndc", "user"), "c", cex = 1.65, xpd = NA)
+text(grconvertX(.015, "ndc", "user"), grconvertY(0.985, "ndc", "user"), "a", cex = 1.65, xpd = NA)
+text(grconvertX(.015, "ndc", "user"), grconvertY(0.740, "ndc", "user"), "b", cex = 1.65, xpd = NA)
+text(grconvertX(.015, "ndc", "user"), grconvertY(0.485, "ndc", "user"), "c", cex = 1.65, xpd = NA)
+text(grconvertX(.015, "ndc", "user"), grconvertY(0.240, "ndc", "user"), "d", cex = 1.65, xpd = NA)
 
 dev.off()
 

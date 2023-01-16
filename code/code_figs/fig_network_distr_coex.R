@@ -19,6 +19,7 @@ library(networkD3)
 library(reshape2)
 library(webshot)
 library(ggpubr)
+library(beepr)
 #library(shape)
 
 wadj <- graph_from_adjacency_matrix(AB, mode = "directed", weighted = TRUE, diag = FALSE, add.colnames = NULL)
@@ -306,15 +307,19 @@ library(grid)
 
 png(filename = "figures/network_distr_coex.png", width = 20, height = 20, units = "in", res = 1000)
 
-layout(matrix(c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
-                1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
-                1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
-                1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
-                3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                3, 3, 3, 3, 3, 3, 3, 3, 3, 3), nrow = 6, ncol = 10, byrow = TRUE))
+layout(matrix(c(1, 1, 2, 2, 2, 2, 2, 3, 3,
+                1, 1, 2, 2, 2, 2, 2, 3, 3,
+                1, 1, 2, 2, 2, 2, 2, 3, 3,
+                1, 1, 2, 2, 2, 2, 2, 3, 3,
+                1, 1, 2, 2, 2, 2, 2, 3, 3,
+                4, 4, 4, 4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4, 4, 4, 4, 4, 4), nrow = 8, ncol = 9, byrow = TRUE))
 #layout(matrix(c(1, 2, 3, 3), 2, 2, byrow = TRUE))
 
 spnames <- 2.85
+
+plot.new()
 
 plot(wadj, layout = lyo,
      edge.curved = cedge,
@@ -326,27 +331,29 @@ plot(wadj, layout = lyo,
      vertex.label.cex = spnames,
      vertex.frame.color = "white")
 
-plot(web, layout = mtf,
-     edge.color = c("gray50", "gray50", "gray75", "black", "gray20", "gray20", "black", "gray75"),
-     edge.curved = c(0, 0, 0, 0.25, 0.25, 0.25, 0.25, 0),
-     edge.width = abs(E(web)$weight),
-     edge.arrow.size = 2,
-     edge.loop.angle = c(0, 0, 0, 2, 0, 0, 1, 0),
-     edge.label = c(expression(alpha[inter]), expression(gamma), expression(gamma), expression(beta[gamma]),
-                    expression(beta[alpha]), expression(alpha[intra]), expression(alpha[intra])),
-     edge.label.x = c(-0.35, -0.5, 0.475, -0.1, 0.1, 1.2, -1.2),
-     edge.label.y = c(-0.1, 0.65, 0.65, 0.425, -0.625, -0.5, -0.5),
-     edge.label.font = 2,
-     edge.label.cex = 4,
-     edge.label.family = "Helvetica",
-     edge.label.color = "black",
-     vertex.color = c("coral1", rep("darkcyan", 3), rgb(0, 0, 0, 0)),
-     vertex.label.family = "Helvetica",
-     vertex.label.color = "white",
-     vertex.label.font = 2,
-     vertex.label.cex = spnames,
-     vertex.frame.color = c(rep("white", 4), rgb(0, 0, 0, 0)),
-     vertex.size = c(rep(15, 4), 35))
+plot.new()
+
+#plot(web, layout = mtf,
+#     edge.color = c("gray50", "gray50", "gray75", "black", "gray20", "gray20", "black", "gray75"),
+#     edge.curved = c(0, 0, 0, 0.25, 0.25, 0.25, 0.25, 0),
+#     edge.width = abs(E(web)$weight),
+#     edge.arrow.size = 2,
+#     edge.loop.angle = c(0, 0, 0, 2, 0, 0, 1, 0),
+#     edge.label = c(expression(alpha[inter]), expression(gamma), expression(gamma), expression(beta[gamma]),
+#                    expression(beta[alpha]), expression(alpha[intra]), expression(alpha[intra])),
+#     edge.label.x = c(-0.35, -0.5, 0.475, -0.1, 0.1, 1.2, -1.2),
+#     edge.label.y = c(-0.1, 0.65, 0.65, 0.425, -0.625, -0.5, -0.5),
+#     edge.label.font = 2,
+#     edge.label.cex = 4,
+#     edge.label.family = "Helvetica",
+#     edge.label.color = "black",
+#     vertex.color = c("coral1", rep("darkcyan", 3), rgb(0, 0, 0, 0)),
+#     vertex.label.family = "Helvetica",
+#     vertex.label.color = "white",
+#     vertex.label.font = 2,
+#     vertex.label.cex = spnames,
+#     vertex.frame.color = c(rep("white", 4), rgb(0, 0, 0, 0)),
+#     vertex.size = c(rep(15, 4), 35))
 
 plot.new()
 
@@ -355,23 +362,13 @@ pushViewport(vps$figure)
 vp1 <-plotViewport(c(2, 3, 2, 3))
 print(pX, vp = vp1)
 
-line = 85
 cex = 3
 side = 3
-adj = 0.01
 
-mtext("a", side = side, line = line, cex = cex, adj = adj)
+mtext("a", side = side, line = 86, cex = cex, adj = 0.25)
 
-line = 2
+mtext("b", side = side, line = -1, cex = cex, adj = -0.01)
 
-mtext("c", side = side, line = line, cex = cex, adj = adj)
-
-adj = 0.535
-
-mtext("d", side = side, line = line, cex = cex, adj = adj)
-
-line = 85
-
-mtext("b", side = side, line = line, cex = cex, adj = adj)
+mtext("c", side = side, line = -1, cex = cex, adj = 0.535)
 
 dev.off(); beep(2)
